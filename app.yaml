@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: exadel-app
+spec:
+  selector:
+    matchLabels:
+      app: exadel-app
+  template:
+    metadata:
+      labels:
+        app: exadel-app
+    spec:
+      containers:
+        - name: exadel-app
+          image: antongarakh/exadel-devops-traning-web-app:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: exadel-app-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: exadel-app-service
+spec:
+  selector:
+    app: exadel-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 31000
+  type: NodePort
